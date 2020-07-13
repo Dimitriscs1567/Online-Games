@@ -27,9 +27,17 @@ class GameSelectionScreen extends StatelessWidget {
               return GridView.count(
                 crossAxisCount: crossAxisCount,
                 children: [
-                  Card(
-                    margin: const EdgeInsets.all(10),
-                    child: Text("Tichu"),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/tichu/tichu-cover.png",
+                        fit: BoxFit.fill,
+                        width: 200,
+                        height: 300,
+                      ),
+                    ],
                   ),
                 ],
               );
