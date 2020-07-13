@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_games/screens/game_selection_screen.dart';
+import 'package:online_games/utils/custom_router.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 void main() {
@@ -14,8 +14,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: CustomRouter().router.generator,
+      initialRoute: "/games",
       title: 'Online Games',
-      home: GameSelectionScreen(),
     );
   }
 }
