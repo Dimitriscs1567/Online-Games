@@ -3,7 +3,7 @@ import 'package:online_games/widgets/screen_wrapper.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class RoomSelectionScreen extends StatelessWidget {
-  final game;
+  final String game;
 
   RoomSelectionScreen({@required this.game});
 
@@ -20,7 +20,7 @@ class RoomSelectionScreen extends StatelessWidget {
       {
         "totalPlayers": 4,
         "currentPlayers": 4,
-        "name": "My Tichu",
+        "name": "My Tichu 2",
         "host": "evgenios",
         "id": 2,
       },
@@ -33,7 +33,7 @@ class RoomSelectionScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Text(
-              "Current Rooms",
+              "Current ${game.toUpperCase()[0] + game.substring(1)} Rooms",
               style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
             ),
           ),
