@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:online_games/utils/custom_router.dart';
@@ -8,13 +7,6 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class GameSelectionScreen extends StatelessWidget {
   final cRouter = CustomRouter();
-  final games = List<Map>.filled(
-    1,
-    Map.from({
-      "image": "assets/tichu/tichu-cover.png",
-      "name": "tichu",
-    }),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +25,21 @@ class GameSelectionScreen extends StatelessWidget {
             child: FutureBuilder(
               future: _getGames(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.connectionState == ConnectionState.active ||
+                    snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
+                } else {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.docs.isEmpty) {
+                      return _emptyBody();
+                    }
+                    return _gamesBody(snapshot.data.docs);
+                  } else {
+                    return _errorBody();
+                  }
                 }
-
-                if (snapshot.hasData) {
-                  print(snapshot.data.toString());
-                  return _gamesBody();
-                } else if (snapshot.hasError) {
-                  return _errorBody();
-                }
-
-                return Container();
               },
             ),
           ),
@@ -81,7 +74,7 @@ class GameSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _gamesBody() {
+  Widget _gamesBody(List<DocumentSnapshot> games) {
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
         int crossAxisCount;
@@ -109,10 +102,10 @@ class GameSelectionScreen extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           cRouter.router
-                              .navigateTo(context, "/${game["name"]}/rooms");
+                              .navigateTo(context, "/${game.id}/rooms");
                         },
                         child: Image.asset(
-                          game["image"],
+                          game.data()["image"],
                           fit: BoxFit.fill,
                           width: 200,
                           height: 300,
@@ -127,7 +120,7 @@ class GameSelectionScreen extends StatelessWidget {
   }
 
   Future<QuerySnapshot> _getGames() {
-    fs.Firestore db = firestore();
-    return db.collection("games").get();
+    Firestore db = firestore();
+    return db.collection("Games").get();
   }
 }

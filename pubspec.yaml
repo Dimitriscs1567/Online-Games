@@ -33,6 +33,7 @@ dependencies:
   firebase: ^7.3.0
   firebase_core: ^0.4.5
   firebase_auth: ^0.16.1
+  google_sign_in: ^4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/tichu/tichu-cover.png
+    - assets/google-button.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
