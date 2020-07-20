@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:firebase/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:online_games/utils/custom_router.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
@@ -23,7 +24,7 @@ class GameSelectionScreen extends StatelessWidget {
           ),
           Expanded(
             child: FutureBuilder(
-              future: _getGames(),
+              future: _getGames(context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active ||
                     snapshot.connectionState == ConnectionState.waiting) {
@@ -119,8 +120,12 @@ class GameSelectionScreen extends StatelessWidget {
     );
   }
 
-  Future<QuerySnapshot> _getGames() {
+  Future<QuerySnapshot> _getGames(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser() == null) {
+      cRouter.router.navigateTo(context, "/login");
+    }
+
     Firestore db = firestore();
-    return db.collection("Games").get();
+    return db.collection("games").get();
   }
 }

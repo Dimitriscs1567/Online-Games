@@ -1,10 +1,42 @@
+import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:online_games/utils/custom_router.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _showUsername = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final cRouter = CustomRouter();
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<FirebaseUser>(
+      future: _auth.currentUser(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.hasData) {
+          cRouter.router.navigateTo(context, "/games");
+          return Center();
+        } else {
+          return _mainBody();
+        }
+      },
+    );
+  }
+
+  Widget _mainBody() {
     return Center(
       child: RaisedButton(
         padding: const EdgeInsets.all(0.0),
@@ -41,9 +73,7 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         onPressed: () async {
-          print("dasdasdasdasdasd");
           final GoogleSignIn _googleSignIn = GoogleSignIn();
-          final FirebaseAuth _auth = FirebaseAuth.instance;
 
           final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
           final GoogleSignInAuthentication googleAuth =
@@ -56,7 +86,21 @@ class LoginScreen extends StatelessWidget {
 
           final FirebaseUser user =
               (await _auth.signInWithCredential(credential)).user;
-          print("signed in " + user.displayName);
+
+          Firestore db = firebase.firestore();
+          QuerySnapshot names = await db.collection("users").get();
+          DocumentSnapshot nameExistsSnap = names.docs
+              .firstWhere((doc) => doc.id.compareTo(user.uid) == 0, orElse: () {
+            return null;
+          });
+
+          if (nameExistsSnap != null) {
+            cRouter.router.navigateTo(context, "/games");
+          } else {
+            setState(() {
+              _showUsername = true;
+            });
+          }
         },
       ),
     );
