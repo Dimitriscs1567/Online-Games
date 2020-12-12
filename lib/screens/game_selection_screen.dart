@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:online_games/models/Game.dart';
 import 'package:online_games/utils/api.dart';
-import 'package:online_games/utils/custom_router.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class GameSelectionScreen extends StatelessWidget {
-  final cRouter = CustomRouter();
-
   @override
   Widget build(BuildContext context) {
     return ScreenWrapper(
@@ -98,8 +96,7 @@ class GameSelectionScreen extends StatelessWidget {
                 (game) => Container(
                   alignment: Alignment.center,
                   child: InkWell(
-                    onTap: () => cRouter.router
-                        .navigateTo(context, "/${game.title}/boards"),
+                    onTap: () => Get.toNamed("/games/${game.title}/boards"),
                     child: Image.network(
                       API.BASIC_URL + "/" + game.image,
                       fit: BoxFit.fill,

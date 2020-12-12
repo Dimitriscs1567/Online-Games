@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-class RoomSelectionScreen extends StatelessWidget {
-  final String game;
-
-  RoomSelectionScreen({@required this.game});
+class BoardSelectionScreen extends StatelessWidget {
+  final String game = Get.parameters["game"];
 
   @override
   Widget build(BuildContext context) {

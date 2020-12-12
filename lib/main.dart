@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:online_games/utils/custom_router.dart';
+import 'package:get/get.dart';
+import 'package:online_games/screens/board_selection_screen.dart';
+import 'package:online_games/screens/game_selection_screen.dart';
+import 'package:online_games/screens/login_screen.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 void main() {
@@ -14,9 +17,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: CustomRouter().router.generator,
-      initialRoute: "/games",
+    return GetMaterialApp(
+      initialRoute: '/games',
+      getPages: [
+        GetPage(name: '/login', page: () => LoginScreen()),
+        GetPage(name: '/games', page: () => GameSelectionScreen()),
+        GetPage(
+            name: '/games/:game/boards', page: () => BoardSelectionScreen()),
+      ],
       title: 'Online Games',
     );
   }
