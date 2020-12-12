@@ -1,7 +1,6 @@
-import 'package:firebase/firebase.dart';
-import 'package:firebase/firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:online_games/models/Game.dart';
+import 'package:online_games/utils/api.dart';
 import 'package:online_games/utils/custom_router.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -24,7 +23,7 @@ class GameSelectionScreen extends StatelessWidget {
           ),
           Expanded(
             child: FutureBuilder(
-              future: _getGames(context),
+              future: API.getAllGames(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active ||
                     snapshot.connectionState == ConnectionState.waiting) {
@@ -33,10 +32,10 @@ class GameSelectionScreen extends StatelessWidget {
                   );
                 } else {
                   if (snapshot.hasData) {
-                    if (snapshot.data.docs.isEmpty) {
+                    if (snapshot.data.isEmpty) {
                       return _emptyBody();
                     }
-                    return _gamesBody(snapshot.data.docs);
+                    return _gamesBody(snapshot.data);
                   } else {
                     return _errorBody();
                   }
@@ -75,7 +74,7 @@ class GameSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _gamesBody(List<DocumentSnapshot> games) {
+  Widget _gamesBody(List<Game> games) {
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
         int crossAxisCount;
@@ -94,38 +93,25 @@ class GameSelectionScreen extends StatelessWidget {
         return GridView.count(
           crossAxisCount: crossAxisCount,
           scrollDirection: Axis.vertical,
-          childAspectRatio: 0.7,
           children: games
-              .map((game) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          cRouter.router
-                              .navigateTo(context, "/${game.id}/rooms");
-                        },
-                        child: Image.asset(
-                          game.data()["image"],
-                          fit: BoxFit.fill,
-                          width: 200,
-                          height: 300,
-                        ),
-                      ),
-                    ],
-                  ))
+              .map(
+                (game) => Container(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () => cRouter.router
+                        .navigateTo(context, "/${game.title}/boards"),
+                    child: Image.network(
+                      API.BASIC_URL + "/" + game.image,
+                      fit: BoxFit.fill,
+                      width: 200,
+                      height: 300,
+                    ),
+                  ),
+                ),
+              )
               .toList(),
         );
       },
     );
-  }
-
-  Future<QuerySnapshot> _getGames(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser() == null) {
-      cRouter.router.navigateTo(context, "/login");
-    }
-
-    Firestore db = firestore();
-    return db.collection("games").get();
   }
 }

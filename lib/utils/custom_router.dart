@@ -4,9 +4,13 @@ import 'package:online_games/screens/login_screen.dart';
 import 'package:online_games/screens/room_selection_screen.dart';
 
 class CustomRouter {
-  final router = Router();
+  final router = FluroRouter();
 
   static final _customRouter = CustomRouter._internal();
+
+  factory CustomRouter() {
+    return _customRouter;
+  }
 
   CustomRouter._internal() {
     router.define(
@@ -26,7 +30,7 @@ class CustomRouter {
       ),
     );
     router.define(
-      "/:game/rooms",
+      "/:game/boards",
       handler: Handler(
         handlerFunc: (context, parameters) {
           return RoomSelectionScreen(
@@ -35,9 +39,5 @@ class CustomRouter {
         },
       ),
     );
-  }
-
-  factory CustomRouter() {
-    return _customRouter;
   }
 }
