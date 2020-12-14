@@ -11,27 +11,25 @@ class GameSelectionScreen extends StatelessWidget {
     return ScreenWrapper(
       withFloatingButton: false,
       appbarTitle: "All Games",
-      child: Expanded(
-        child: FutureBuilder(
-          future: API.getAllGames(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active ||
-                snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              if (snapshot.hasData) {
-                if (snapshot.data.isEmpty) {
-                  return _emptyBody();
-                }
-                return _gamesBody(snapshot.data);
-              } else {
-                return _errorBody();
+      child: FutureBuilder(
+        future: API.getAllGames(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (snapshot.hasData) {
+              if (snapshot.data.isEmpty) {
+                return _emptyBody();
               }
+              return _gamesBody(snapshot.data);
+            } else {
+              return _errorBody();
             }
-          },
-        ),
+          }
+        },
       ),
     );
   }
