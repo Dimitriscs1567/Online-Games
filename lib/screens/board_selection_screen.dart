@@ -26,16 +26,10 @@ class BoardSelectionScreen extends StatelessWidget {
     ];
 
     return ScreenWrapper(
+      appbarTitle: "All $game Boards",
       withFloatingButton: true,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              "Current ${game.toUpperCase()[0] + game.substring(1)} Rooms",
-              style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
-            ),
-          ),
           Expanded(
             child: ResponsiveBuilder(
               builder: (context, sizingInformation) {

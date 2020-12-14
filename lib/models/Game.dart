@@ -1,22 +1,3 @@
-// export const GameSchema = new Schema(
-//     {
-//         title: {
-//             type: String,
-//             required: true,
-//             unique: true
-//         },
-//         image: {
-//             type: String,
-//             required: true,
-//         },
-//         cards: [CardSchema],
-//         boards: [BoardSchema]
-//     },
-//     {
-//         timestamps: true,
-//     }
-// );
-
 class Game {
   String _title;
   String _image;
