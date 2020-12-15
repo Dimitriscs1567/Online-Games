@@ -8,7 +8,7 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     API
-        .login("dimis", "123456")
+        .login("dimitriscs081567@hotmail.com", "123456")
         .then((value) => user.value = User.fromMap(value));
 
     super.onInit();

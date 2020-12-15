@@ -26,7 +26,8 @@ class API {
     try {
       final response = await http.post(
         LOGIN,
-        body: {"email": email, "password": password},
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"email": email, "password": password}),
       );
       final body = json.decode(response.body);
 
