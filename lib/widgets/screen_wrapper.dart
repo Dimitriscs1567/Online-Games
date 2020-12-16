@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
+import 'package:online_games/widgets/dialogs/login_dialog.dart';
 
 class ScreenWrapper extends StatelessWidget {
   final Widget child;
@@ -22,14 +23,27 @@ class ScreenWrapper extends StatelessWidget {
           title: Text(appbarTitle),
           centerTitle: true,
           actions: [
-            controller.user.value.token.isEmpty
-                ? OutlineButton(
-                    child: Text("Login"),
-                    onPressed: () => {},
+            controller.user.value.username.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: OutlineButton(
+                      borderSide: BorderSide.none,
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onPressed: openDialog,
+                    ),
                   )
-                : IconButton(
-                    icon: Icon(Icons.person),
-                    onPressed: () => {},
+                : Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                      icon: Icon(Icons.person),
+                      onPressed: () => {},
+                    ),
                   ),
           ],
         ),
@@ -53,5 +67,10 @@ class ScreenWrapper extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void openDialog() {
+    showDialog(context: Get.context, builder: (context) => LoginDialog())
+        .then((value) => null);
   }
 }
