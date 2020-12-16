@@ -58,7 +58,7 @@ class ScreenWrapper extends StatelessWidget {
         body: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 1000),
-            child: controller.user.value.username.isEmpty
+            child: withAuthentication && controller.user.value.username.isEmpty
                 ? UnauthorizedWidget()
                 : child,
           ),

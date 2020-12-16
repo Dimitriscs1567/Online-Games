@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:online_games/models/Game.dart';
 import 'package:online_games/utils/api.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 
 class GameSelectionScreen extends StatelessWidget {
   @override
