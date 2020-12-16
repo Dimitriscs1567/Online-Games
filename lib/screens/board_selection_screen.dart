@@ -8,90 +8,59 @@ class BoardSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rooms = [
-      {
-        "totalPlayers": 4,
-        "currentPlayers": 3,
-        "name": "My Tichu",
-        "host": "dimis",
-        "id": 1,
-      },
-      {
-        "totalPlayers": 4,
-        "currentPlayers": 4,
-        "name": "My Tichu 2",
-        "host": "evgenios",
-        "id": 2,
-      },
-    ];
-
     return ScreenWrapper(
-      appbarTitle: "All $game Boards",
-      withFloatingButton: true,
-      child: Column(
-        children: [
-          Expanded(
-            child: ResponsiveBuilder(
-              builder: (context, sizingInformation) {
-                int crossAxisCount;
-                switch (sizingInformation.deviceScreenType) {
-                  case DeviceScreenType.desktop:
-                    crossAxisCount = 3;
-                    break;
-                  case DeviceScreenType.tablet:
-                    crossAxisCount = 2;
-                    break;
-                  default:
-                    crossAxisCount = 1;
-                    break;
-                }
+      withAuthentication: true,
+      appbarTitle: "$game Boards",
+      floatingButton: FloatingActionButton.extended(
+        label: Text("Create room"),
+        icon: Icon(
+          Icons.add,
+          size: 35.0,
+        ),
+        onPressed: () {},
+      ),
+      child: GridView.extent(
+        maxCrossAxisExtent: 400,
+        scrollDirection: Axis.vertical,
+        mainAxisSpacing: 30.0,
+        crossAxisSpacing: 30.0,
+        childAspectRatio: 1.3,
+        children: [].map((room) {
+          Color bgColor =
+              (room["currentPlayers"] as int) == (room["totalPlayers"] as int)
+                  ? Colors.red[200]
+                  : Colors.blue[200];
 
-                return GridView.count(
-                  crossAxisCount: crossAxisCount,
-                  scrollDirection: Axis.vertical,
-                  crossAxisSpacing: 30,
-                  childAspectRatio: 1.3,
-                  children: rooms.map((room) {
-                    Color bgColor = (room["currentPlayers"] as int) ==
-                            (room["totalPlayers"] as int)
-                        ? Colors.red[200]
-                        : Colors.blue[200];
-
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Card(
-                            color: bgColor,
-                            child: ListTile(
-                              title: Text(
-                                room["name"],
-                                style: TextStyle(
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              trailing: Text(
-                                "by ${room["host"]}",
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                              subtitle: Text(
-                                "Players: ${room["currentPlayers"]} out of ${room["totalPlayers"]}",
-                                style: TextStyle(fontSize: 18.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-          ),
-        ],
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {},
+                child: Card(
+                  color: bgColor,
+                  child: ListTile(
+                    title: Text(
+                      room["name"],
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    trailing: Text(
+                      "by ${room["host"]}",
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    subtitle: Text(
+                      "Players: ${room["currentPlayers"]} out of ${room["totalPlayers"]}",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }).toList(),
       ),
     );
   }

@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/widgets/dialogs/login_dialog.dart';
+import 'package:online_games/widgets/unauthorized_widget.dart';
 
 class ScreenWrapper extends StatelessWidget {
   final Widget child;
-  final bool withFloatingButton;
+  final Widget floatingButton;
   final String appbarTitle;
+  final bool withAuthentication;
 
   ScreenWrapper({
     @required this.child,
-    @required this.withFloatingButton,
+    @required this.floatingButton,
     @required this.appbarTitle,
+    @required this.withAuthentication,
   });
 
   @override
@@ -48,21 +51,16 @@ class ScreenWrapper extends StatelessWidget {
           ],
         ),
         floatingActionButton: Offstage(
-          offstage: !withFloatingButton,
-          child: FloatingActionButton.extended(
-            label: Text("Create room"),
-            icon: Icon(
-              Icons.add,
-              size: 35.0,
-            ),
-            onPressed: () {},
-          ),
+          offstage:
+              floatingButton == null || controller.user.value.username.isEmpty,
+          child: floatingButton != null ? floatingButton : Container(),
         ),
-        body: Container(
-          alignment: Alignment.topCenter,
+        body: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 1000),
-            child: child,
+            child: controller.user.value.username.isEmpty
+                ? UnauthorizedWidget()
+                : child,
           ),
         ),
       ),
@@ -70,7 +68,6 @@ class ScreenWrapper extends StatelessWidget {
   }
 
   void openDialog() {
-    showDialog(context: Get.context, builder: (context) => LoginDialog())
-        .then((value) => null);
+    showDialog(context: Get.context, builder: (context) => LoginDialog());
   }
 }

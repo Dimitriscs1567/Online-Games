@@ -42,7 +42,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     }
                   },
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return 'Please enter your email or username';
                     }
                     return null;
@@ -63,7 +63,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     }
                   },
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return 'Please enter your password';
                     }
 
@@ -112,7 +112,7 @@ class _LoginDialogState extends State<LoginDialog> {
       });
 
       controller
-          .login(emailController.text, passwordController.text)
+          .login(emailController.text.trim(), passwordController.text.trim())
           .then((value) {
         if (value) {
           Navigator.pop(context);

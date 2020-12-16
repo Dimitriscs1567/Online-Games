@@ -9,7 +9,8 @@ class GameSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWrapper(
-      withFloatingButton: false,
+      withAuthentication: false,
+      floatingButton: null,
       appbarTitle: "All Games",
       child: FutureBuilder(
         future: API.getAllGames(),
@@ -61,42 +62,31 @@ class GameSelectionScreen extends StatelessWidget {
   }
 
   Widget _gamesBody(List<Game> games) {
-    return ResponsiveBuilder(
-      builder: (context, sizingInformation) {
-        int crossAxisCount;
-        switch (sizingInformation.deviceScreenType) {
-          case DeviceScreenType.desktop:
-            crossAxisCount = 3;
-            break;
-          case DeviceScreenType.tablet:
-            crossAxisCount = 2;
-            break;
-          default:
-            crossAxisCount = 1;
-            break;
-        }
-
-        return GridView.count(
-          crossAxisCount: crossAxisCount,
-          scrollDirection: Axis.vertical,
-          children: games
-              .map(
-                (game) => Container(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: () => Get.toNamed("/games/${game.title}/boards"),
-                    child: Image.network(
-                      API.BASIC_URL + "/" + game.image,
-                      fit: BoxFit.fill,
-                      width: 200,
-                      height: 300,
-                    ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: GridView.extent(
+        maxCrossAxisExtent: 300,
+        mainAxisSpacing: 30.0,
+        crossAxisSpacing: 30.0,
+        scrollDirection: Axis.vertical,
+        childAspectRatio: 0.67,
+        children: games
+            .map(
+              (game) => Container(
+                alignment: Alignment.center,
+                child: InkWell(
+                  onTap: () => Get.toNamed("/games/${game.title}/boards"),
+                  child: Image.network(
+                    API.BASIC_URL + "/" + game.image,
+                    fit: BoxFit.fill,
+                    width: 200,
+                    height: 300,
                   ),
                 ),
-              )
-              .toList(),
-        );
-      },
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
