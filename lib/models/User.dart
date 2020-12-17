@@ -1,6 +1,6 @@
 class User {
-  String _username;
-  bool _emailConfirmed;
+  late String _username;
+  late bool _emailConfirmed;
 
   User(this._username, this._emailConfirmed);
 

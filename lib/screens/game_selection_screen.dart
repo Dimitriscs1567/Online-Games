@@ -21,10 +21,10 @@ class GameSelectionScreen extends StatelessWidget {
             );
           } else {
             if (snapshot.hasData) {
-              if (snapshot.data.isEmpty) {
+              if ((snapshot.data as List).isEmpty) {
                 return _emptyBody();
               }
-              return _gamesBody(snapshot.data);
+              return _gamesBody(snapshot.data as List<Game>);
             } else {
               return _errorBody();
             }

@@ -1,6 +1,6 @@
 class Game {
-  String _title;
-  String _image;
+  late String _title;
+  late String _image;
 
   Game(this._title, this._image);
 

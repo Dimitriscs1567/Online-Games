@@ -5,10 +5,10 @@ import 'package:online_games/widgets/dialogs/login_dialog.dart';
 import 'package:online_games/widgets/unauthorized_widget.dart';
 
 class ScreenWrapper extends StatelessWidget {
-  final Widget child;
-  final Widget floatingButton;
-  final String appbarTitle;
-  final bool withAuthentication;
+  final Widget? child;
+  final Widget? floatingButton;
+  final String? appbarTitle;
+  final bool? withAuthentication;
 
   ScreenWrapper({
     @required this.child,
@@ -23,7 +23,7 @@ class ScreenWrapper extends StatelessWidget {
       init: AuthController(),
       builder: (controller) => Scaffold(
         appBar: AppBar(
-          title: Text(appbarTitle),
+          title: Text(appbarTitle ?? ""),
           centerTitle: true,
           actions: [
             controller.user.value.username.isEmpty
@@ -58,7 +58,9 @@ class ScreenWrapper extends StatelessWidget {
         body: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 1000),
-            child: withAuthentication && controller.user.value.username.isEmpty
+            child: withAuthentication != null &&
+                    withAuthentication! &&
+                    controller.user.value.username.isEmpty
                 ? UnauthorizedWidget()
                 : child,
           ),

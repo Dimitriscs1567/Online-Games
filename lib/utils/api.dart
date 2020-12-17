@@ -21,9 +21,9 @@ class API {
         return result;
       }
 
-      return null;
+      return [];
     } catch (e) {
-      return null;
+      return [];
     }
   }
 

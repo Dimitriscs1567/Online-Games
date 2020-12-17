@@ -42,7 +42,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     }
                   },
                   validator: (value) {
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return 'Please enter your email or username';
                     }
                     return null;
@@ -63,7 +63,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     }
                   },
                   validator: (value) {
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return 'Please enter your password';
                     }
 
@@ -105,7 +105,7 @@ class _LoginDialogState extends State<LoginDialog> {
   void login() {
     var controller = Get.find<AuthController>();
 
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _wrongCredentials = false;
         _isLoading = true;
