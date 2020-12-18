@@ -71,8 +71,7 @@ class GameSelectionScreen extends StatelessWidget {
         childAspectRatio: 0.67,
         children: games
             .map(
-              (game) => Container(
-                alignment: Alignment.center,
+              (game) => Center(
                 child: InkWell(
                   onTap: () => Get.toNamed("/games/${game.title}/boards"),
                   child: Image.network(

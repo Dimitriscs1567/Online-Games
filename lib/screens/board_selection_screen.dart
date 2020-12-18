@@ -30,61 +30,80 @@ class BoardSelectionScreen extends StatelessWidget {
           }
 
           return StreamBuilder<dynamic>(
-            stream: Socket.channel.stream,
+            stream: Socket.getChannel(_game).stream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
 
-              return GridView.extent(
-                maxCrossAxisExtent: 400,
-                scrollDirection: Axis.vertical,
-                mainAxisSpacing: 30.0,
-                crossAxisSpacing: 30.0,
-                childAspectRatio: 1.3,
-                children: [json.decode(snapshot.data)].map((board) {
-                  int numOfPlayers = board["otherPlayers"].length;
-                  int maxCapacity = board["maxCapacity"] as int;
+              final type = json.decode(snapshot.data)["type"] as String;
+              if (type.compareTo("Boards") != 0) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-                  Color? bgColor = numOfPlayers == maxCapacity - 1
-                      ? Colors.red[200]
-                      : Colors.blue[200];
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 10.0),
+                child: GridView.extent(
+                  maxCrossAxisExtent: 400,
+                  scrollDirection: Axis.vertical,
+                  mainAxisSpacing: 30.0,
+                  crossAxisSpacing: 30.0,
+                  childAspectRatio: 2.3,
+                  children: (json.decode(snapshot.data)["body"]["boards"]
+                          as List<dynamic>)
+                      .map((board) {
+                    int numOfPlayers = board["otherPlayers"].length;
+                    int maxCapacity = board["capacity"] as int;
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
+                    Color? bgColor = numOfPlayers == maxCapacity - 1
+                        ? Colors.red[200]
+                        : Colors.blue[200];
+
+                    return Center(
+                      child: ListTile(
+                        tileColor: bgColor,
                         onTap: () {},
-                        child: Card(
-                          color: bgColor,
-                          child: ListTile(
-                            title: Text(
-                              board["title"],
-                              style: TextStyle(
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            trailing: Text(
-                              "by ${board["creator"]}",
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                            subtitle: Text(
+                        title: Text(
+                          board["title"],
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          "by ${board["creator"]}",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               "Players: ${numOfPlayers + 1} out of $maxCapacity",
                               style: TextStyle(fontSize: 18.0),
                             ),
-                          ),
+                            Padding(padding: const EdgeInsets.all(4.0)),
+                            Text(
+                              "Created ${getCreatedMessage(board["createdAt"])} minutes ago",
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               );
             },
           );
         },
       ),
     );
+  }
+
+  String getCreatedMessage(String date) {
+    var parsedDate = DateTime.parse(date);
+
+    return DateTime.now().difference(parsedDate).inMinutes.toString();
   }
 }

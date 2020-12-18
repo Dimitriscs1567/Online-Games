@@ -10,11 +10,19 @@ class Socket {
         Uri.parse("$BASIC_URL?token=${Storage.getValue(Storage.TOKEN)}"));
   }
 
-  static WebSocketChannel get channel {
+  static WebSocketChannel getChannel(String gameTitle) {
     if (_channel == null) {
       _initChannel();
     }
 
+    getAllBoards(gameTitle);
+
     return _channel!;
+  }
+
+  static getAllBoards(String gameTitle) {
+    if (_channel != null) {
+      _channel!.sink.add("boards:$gameTitle");
+    }
   }
 }
