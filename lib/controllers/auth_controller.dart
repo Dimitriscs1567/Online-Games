@@ -62,4 +62,17 @@ class AuthController extends GetxController {
 
     return false;
   }
+
+  Future<bool> signUp(String email, String username, String password) async {
+    var response = await API.signUp(email, username, password);
+    if (response != null) {
+      Storage.saveValue(Storage.TOKEN, response["token"]);
+      Storage.saveValue(Storage.REFRESH_TOKEN, response["refreshToken"]);
+      user.value = User.fromMap(response);
+
+      return true;
+    }
+
+    return false;
+  }
 }

@@ -11,4 +11,8 @@ class User {
 
   String get username => this._username;
   bool get emailConfirmed => this._emailConfirmed;
+
+  bool isLoggedIn() {
+    return this._username.isNotEmpty;
+  }
 }

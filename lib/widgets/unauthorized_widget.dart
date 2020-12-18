@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_games/widgets/dialogs/login_dialog.dart';
+import 'package:online_games/widgets/dialogs/login_signup_dialog.dart';
 
 class UnauthorizedWidget extends StatelessWidget {
   @override
@@ -21,18 +21,19 @@ class UnauthorizedWidget extends StatelessWidget {
         ),
         ElevatedButton(
           style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.red),
             padding: MaterialStateProperty.all(const EdgeInsets.symmetric(
               vertical: 14.0,
               horizontal: 20.0,
             )),
           ),
           child: Text(
-            "Login",
-            style: TextStyle(fontSize: 20.0),
+            "Login / Sign up",
+            style: TextStyle(fontSize: 19.0),
           ),
           onPressed: () => showDialog(
             context: context,
-            builder: (context) => LoginDialog(),
+            builder: (context) => LoginSignUpDialog(),
           ),
         )
       ],
