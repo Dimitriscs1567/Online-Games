@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
+import 'package:online_games/models/Board.dart';
 import 'package:online_games/utils/socket.dart';
+import 'package:online_games/widgets/boardWidget.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 
 class BoardSelectionScreen extends StatelessWidget {
@@ -45,51 +47,18 @@ class BoardSelectionScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 10.0),
                 child: GridView.extent(
-                  maxCrossAxisExtent: 400,
+                  maxCrossAxisExtent: 350,
                   scrollDirection: Axis.vertical,
                   mainAxisSpacing: 30.0,
                   crossAxisSpacing: 30.0,
-                  childAspectRatio: 2.3,
+                  childAspectRatio: 2.0,
                   children: (json.decode(snapshot.data)["body"]["boards"]
                           as List<dynamic>)
-                      .map((board) {
-                    int numOfPlayers = board["otherPlayers"].length;
-                    int maxCapacity = board["capacity"] as int;
-
-                    Color? bgColor = numOfPlayers == maxCapacity - 1
-                        ? Colors.red[200]
-                        : Colors.blue[200];
+                      .map((boardMap) {
+                    final board = Board.fromMap(boardMap);
 
                     return Center(
-                      child: ListTile(
-                        tileColor: bgColor,
-                        onTap: () {},
-                        title: Text(
-                          board["title"],
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        trailing: Text(
-                          "by ${board["creator"]}",
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Players: ${numOfPlayers + 1} out of $maxCapacity",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            Padding(padding: const EdgeInsets.all(4.0)),
-                            Text(
-                              "Created ${getCreatedMessage(board["createdAt"])} minutes ago",
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: BoardWidget(board: board),
                     );
                   }).toList(),
                 ),
