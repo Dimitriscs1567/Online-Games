@@ -8,14 +8,25 @@ class Board {
   late bool _started;
   late List<String> _otherPlayers;
 
+  Board.empty() {
+    this._title = "";
+    this._password = "";
+    this._creator = "";
+    this._capacity = 0;
+    this._gameTitle = "";
+    this._created = "";
+    this._started = false;
+    this._otherPlayers = [];
+  }
+
   Board.fromMap(dynamic map) {
     this._title = map["title"];
     this._password = map["password"] ?? "";
     this._creator = map["creator"];
-    this._capacity = map["capacity"];
+    this._capacity = map["capacity"] as int;
     this._gameTitle = map["game"]["title"];
     this._created = _getCreatedMessage(map["createdAt"]);
-    this._started = map["started"];
+    this._started = map["started"] as bool;
     this._otherPlayers = (map["otherPlayers"] as List<dynamic>)
         .map((e) => e.toString())
         .toList();

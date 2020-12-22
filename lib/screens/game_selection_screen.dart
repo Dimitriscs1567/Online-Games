@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_games/controllers/game_controller.dart';
 import 'package:online_games/models/Game.dart';
-import 'package:online_games/utils/api.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 
 class GameSelectionScreen extends StatelessWidget {
@@ -11,38 +11,21 @@ class GameSelectionScreen extends StatelessWidget {
       withAuthentication: false,
       floatingButton: null,
       appbarTitle: "All Games",
-      child: FutureBuilder(
-        future: API.getAllGames(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active ||
-              snapshot.connectionState == ConnectionState.waiting) {
+      child: GetX<GameController>(
+        init: GameController(),
+        builder: (controller) {
+          if (!controller.isInitiallized.value) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            if (snapshot.hasData) {
-              if ((snapshot.data as List).isEmpty) {
-                return _emptyBody();
-              }
-              return _gamesBody(snapshot.data as List<Game>);
+            if (controller.allGames.isEmpty) {
+              return _emptyBody();
             } else {
-              return _errorBody();
+              return _gamesBody(controller.allGames);
             }
           }
         },
-      ),
-    );
-  }
-
-  Widget _errorBody() {
-    return Center(
-      child: Text(
-        "An error has occured!",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 30.0,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }
@@ -73,9 +56,9 @@ class GameSelectionScreen extends StatelessWidget {
             .map(
               (game) => Center(
                 child: InkWell(
-                  onTap: () => Get.toNamed("/games/${game.title}/boards"),
+                  onTap: () => Get.toNamed("/${game.title}/boards"),
                   child: Image.network(
-                    API.BASIC_URL + "/" + game.image,
+                    game.image,
                     fit: BoxFit.fill,
                     width: 200,
                     height: 300,

@@ -101,6 +101,8 @@ class _LoginSignUpDialogState extends State<LoginSignUpDialog> {
         labelText: label,
       ),
       onChanged: _onChanged,
+      obscureText: label.compareTo("Password") == 0 ||
+          label.compareTo("Confirm Password") == 0,
       validator: (value) => _getValidatorFromLabel(label, value),
     );
   }

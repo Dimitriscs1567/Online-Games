@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/games',
       getPages: [
         GetPage(name: '/games', page: () => GameSelectionScreen()),
-        GetPage(
-            name: '/games/:game/boards', page: () => BoardSelectionScreen()),
+        GetPage(name: '/:game/boards', page: () => BoardSelectionScreen()),
       ],
       title: 'Online Games',
     );
