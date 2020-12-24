@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:online_games/screens/board_selection_screen.dart';
 import 'package:online_games/screens/game_selection_screen.dart';
+import 'package:online_games/screens/play_screen.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 Future<void> main() async {
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/games', page: () => GameSelectionScreen()),
         GetPage(name: '/:game/boards', page: () => BoardSelectionScreen()),
+        GetPage(name: '/:game/play/:creator', page: () => PlayScreen()),
       ],
       title: 'Online Games',
     );

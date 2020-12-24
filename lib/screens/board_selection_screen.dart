@@ -49,21 +49,16 @@ class BoardSelectionScreen extends StatelessWidget {
           }
 
           return StreamBuilder<dynamic>(
-            stream: Socket.getChannel(_gameTitle).stream,
+            stream: Socket.getChannel(_gameTitle)
+                .stream
+                .where(_filterStream)
+                .map(_transformStream),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
-
-              final type = json.decode(snapshot.data)["type"] as String;
-              if (type.compareTo("Boards") != 0) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              final boards =
-                  json.decode(snapshot.data)["body"]["boards"] as List<dynamic>;
-
-              if (boards.isEmpty) {
+              print(snapshot.data);
+              if ((snapshot.data as List<Board>).isEmpty) {
                 return _emptyBody();
               }
 
@@ -76,11 +71,12 @@ class BoardSelectionScreen extends StatelessWidget {
                   mainAxisSpacing: 30.0,
                   crossAxisSpacing: 30.0,
                   childAspectRatio: 2.0,
-                  children: boards.map((boardMap) {
-                    final board = Board.fromMap(boardMap);
-
+                  children: (snapshot.data as List<Board>).map((board) {
                     return Center(
-                      child: BoardWidget(board: board),
+                      child: BoardWidget(
+                        board: board,
+                        onPress: board.isFull() ? null : () {},
+                      ),
                     );
                   }).toList(),
                 ),
@@ -116,5 +112,25 @@ class BoardSelectionScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool _filterStream(dynamic event) {
+    final type = json.decode(event)["type"] as String;
+    if (type.compareTo("Boards") != 0) {
+      return false;
+    }
+
+    final game = json.decode(event)["body"]["gameTitle"] as String;
+    if (game.compareTo(_gameTitle) != 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  List<Board> _transformStream(dynamic event) {
+    final boards = json.decode(event)["body"]["boards"] as List<dynamic>;
+
+    return boards.map((board) => Board.fromMap(board)).toList();
   }
 }
