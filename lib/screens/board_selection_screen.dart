@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/game_controller.dart';
 import 'package:online_games/models/Board.dart';
+import 'package:online_games/models/Message.dart';
 import 'package:online_games/utils/socket.dart';
 import 'package:online_games/widgets/boardWidget.dart';
 import 'package:online_games/widgets/dialogs/create_board_dialog.dart';
@@ -49,8 +50,7 @@ class BoardSelectionScreen extends StatelessWidget {
           }
 
           return StreamBuilder<dynamic>(
-            stream: Socket.getChannel(_gameTitle)
-                .stream
+            stream: Socket.getStream(Message.allBoards(_gameTitle))
                 .where(_filterStream)
                 .map(_transformStream),
             builder: (context, snapshot) {
@@ -75,7 +75,6 @@ class BoardSelectionScreen extends StatelessWidget {
                     return Center(
                       child: BoardWidget(
                         board: board,
-                        onPress: board.isFull() ? null : () {},
                       ),
                     );
                   }).toList(),

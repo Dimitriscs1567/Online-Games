@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:online_games/models/Board.dart';
 import 'package:online_games/models/Game.dart';
 import 'package:online_games/utils/api.dart';
 import 'package:online_games/utils/storage.dart';
@@ -9,7 +8,6 @@ class GameController extends GetxController {
   Rx<Game> selectedGame = Game("", "", 0).obs;
   RxBool isInitiallized = false.obs;
   RxBool selectedGameExists = false.obs;
-  Rx<Board> selectedBoard = Board.empty().obs;
 
   @override
   void onInit() {
@@ -41,7 +39,6 @@ class GameController extends GetxController {
         await API.createNewBoard(creator, title, password, capacity, gameTitle);
 
     if (boardMap != null) {
-      selectedBoard.value = Board.fromMap(boardMap);
       return true;
     }
 

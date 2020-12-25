@@ -8,8 +8,6 @@ class GameSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWrapper(
-      withAuthentication: false,
-      floatingButton: null,
       appbarTitle: "All Games",
       child: GetX<GameController>(
         init: GameController(),

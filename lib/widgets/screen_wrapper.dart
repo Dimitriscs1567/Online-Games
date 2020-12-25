@@ -13,9 +13,9 @@ class ScreenWrapper extends StatelessWidget {
 
   ScreenWrapper({
     @required this.child,
-    @required this.floatingButton,
+    this.floatingButton,
     @required this.appbarTitle,
-    @required this.withAuthentication,
+    this.withAuthentication,
   });
 
   @override
@@ -41,7 +41,7 @@ class ScreenWrapper extends StatelessWidget {
               init: AuthController(),
               builder: (controller) {
                 if (!controller.user.value.isLoggedIn()) {
-                  if (withAuthentication != null && !withAuthentication!) {
+                  if (withAuthentication == null || !withAuthentication!) {
                     return child;
                   }
 

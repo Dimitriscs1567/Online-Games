@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:online_games/models/Board.dart';
 
 class BoardWidget extends StatelessWidget {
   late final Board? board;
-  late final Function? onPress;
 
-  BoardWidget({@required this.board, this.onPress});
+  BoardWidget({@required this.board});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,11 @@ class BoardWidget extends StatelessWidget {
     return Container(
       width: 350,
       child: InkWell(
-        onTap: onPress != null ? () => onPress!() : null,
+        onTap: board!.isFull()
+            ? null
+            : () {
+                Get.toNamed("/${board!.gameTitle}/play/${board!.creator}");
+              },
         child: Card(
           color: bgColor,
           elevation: 5.0,
