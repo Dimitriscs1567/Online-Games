@@ -57,7 +57,7 @@ class BoardSelectionScreen extends StatelessWidget {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
-              print(snapshot.data);
+
               if ((snapshot.data as List<Board>).isEmpty) {
                 return _emptyBody();
               }

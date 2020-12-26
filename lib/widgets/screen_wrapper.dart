@@ -10,12 +10,14 @@ class ScreenWrapper extends StatelessWidget {
   final Widget? floatingButton;
   final String? appbarTitle;
   final bool? withAuthentication;
+  final bool? noConstraints;
 
   ScreenWrapper({
     @required this.child,
     this.floatingButton,
     @required this.appbarTitle,
     this.withAuthentication,
+    this.noConstraints,
   });
 
   @override
@@ -36,7 +38,10 @@ class ScreenWrapper extends StatelessWidget {
           }),
       body: Center(
         child: Container(
-          constraints: BoxConstraints(maxWidth: Constants.MAX_WIDTH),
+          constraints: BoxConstraints(
+              maxWidth: noConstraints != null && noConstraints!
+                  ? 0.0
+                  : Constants.MAX_WIDTH),
           child: GetX<AuthController>(
               init: AuthController(),
               builder: (controller) {

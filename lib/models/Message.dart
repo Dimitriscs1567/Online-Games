@@ -11,9 +11,11 @@ class Message {
     _params = [gameTitle].map((param) => ":$param").toList();
   }
 
-  Message.getBoard(String creator) {
+  Message.getBoard(String creator, String? password) {
     _type = "getBoard";
-    _params = [creator].map((param) => ":$param").toList();
+    _params = (password != null ? [creator, password] : [creator])
+        .map((param) => ":$param")
+        .toList();
   }
 
   String get type => this._type;

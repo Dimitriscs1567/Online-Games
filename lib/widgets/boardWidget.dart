@@ -1,23 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/models/Board.dart';
+import 'package:online_games/widgets/dialogs/board_password_dialog.dart';
 
 class BoardWidget extends StatelessWidget {
   late final Board? board;
+  late final bool _hasPassword;
 
-  BoardWidget({@required this.board});
+  BoardWidget({@required this.board}) {
+    final controller = Get.find<AuthController>();
+
+    _hasPassword = board!.password.isNotEmpty &&
+        board!.creator.compareTo(controller.user.value.username) != 0;
+  }
 
   @override
   Widget build(BuildContext context) {
     Color? bgColor = board!.isFull() ? Colors.red[200] : Colors.blue[200];
+    final List<Widget> header = !_hasPassword
+        ? [
+            Text(
+              board!.title,
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ]
+        : [
+            Text(
+              board!.title,
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(5.0)),
+            Icon(
+              Icons.lock,
+              size: 22.0,
+              color: Colors.red,
+            ),
+          ];
 
     return Container(
       width: 350,
       child: InkWell(
         onTap: board!.isFull()
             ? null
-            : () {
-                Get.toNamed("/${board!.gameTitle}/play/${board!.creator}");
+            : () async {
+                if (_hasPassword) {
+                  String? pass = await showDialog(
+                    context: context,
+                    builder: (context) => BoardPasswordDialog(),
+                  );
+
+                  if (pass != null) {
+                    Get.toNamed(
+                      "/${board!.gameTitle}/play/${board!.creator}",
+                      arguments: pass,
+                    );
+                  }
+                } else {
+                  Get.toNamed("/${board!.gameTitle}/play/${board!.creator}");
+                }
               },
         child: Card(
           color: bgColor,
@@ -27,12 +74,9 @@ class BoardWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  board!.title,
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: header,
                 ),
                 Padding(padding: const EdgeInsets.all(8.0)),
                 Row(
