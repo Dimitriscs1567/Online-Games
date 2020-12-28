@@ -40,7 +40,7 @@ class ScreenWrapper extends StatelessWidget {
         child: Container(
           constraints: BoxConstraints(
               maxWidth: noConstraints != null && noConstraints!
-                  ? 0.0
+                  ? double.infinity
                   : Constants.MAX_WIDTH),
           child: GetX<AuthController>(
               init: AuthController(),
