@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/controllers/game_controller.dart';
 import 'package:online_games/models/Board.dart';
 import 'package:online_games/models/Message.dart';
@@ -28,7 +29,13 @@ class BoardSelectionScreen extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => CreateBoardDialog(),
-          );
+          ).then((value) {
+            final auth = Get.find<AuthController>();
+
+            if (value) {
+              Get.toNamed("/$_gameTitle/play/${auth.user.value.username}");
+            }
+          });
         },
       ),
       child: GetX<GameController>(

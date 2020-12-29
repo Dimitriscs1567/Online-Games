@@ -1,69 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
-import 'package:online_games/utils/api.dart';
+import 'package:online_games/widgets/other_player_widget.dart';
+import 'package:online_games/widgets/playerWidget.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-class Playground extends StatefulWidget {
+class Playground extends StatelessWidget {
   late final dynamic state;
+  late final int playerNumber;
+  late final String playerName;
+  List<int> otherPlayesNumbers = [];
 
-  Playground({@required this.state});
-
-  @override
-  _PlaygroundState createState() => _PlaygroundState();
-}
-
-class _PlaygroundState extends State<Playground> {
-  @override
-  Widget build(BuildContext context) {
-    print(widget.state);
-
-    return ResponsiveBuilder(builder: (context, _) {
-      return Stack(
-        children: [
-          _bottomPlayer(),
-        ],
-      );
-    });
-  }
-
-  Widget _bottomPlayer() {
-    final double maxWidth = Get.width <= 1200 ? Get.width : 1200;
-    final double cardWidth = (maxWidth / 14) - 4;
+  Playground({@required this.state}) {
+    print(state.toString());
     final controller = Get.find<AuthController>();
 
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              controller.user.value.username,
-            ),
-          ),
-          Padding(padding: const EdgeInsets.all(8.0)),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.filled(
-              14,
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 2.0,
-                  vertical: 12.0,
-                ),
-                child: Image.network(
-                  API.BASIC_URL + "/assets/games/Tichu/cardCover.png",
-                  width: cardWidth,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    playerNumber = (state["states"].last)["players"]
+        .indexOf(controller.user.value.username);
+    playerName = (state["states"].last)["players"][playerNumber];
+
+    for (int i = 0; i < state["capacity"]; i++) {
+      if (i != playerNumber) {
+        otherPlayesNumbers.add(i);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> otherPlayers = [];
+    for (int i = 0; i < otherPlayesNumbers.length; i++) {
+      AlignmentGeometry alignment;
+      switch (i) {
+        case 0:
+          alignment = Alignment.centerLeft;
+          break;
+        case 1:
+          alignment = Alignment.topCenter;
+          break;
+        case 2:
+          alignment = Alignment.centerRight;
+          break;
+        default:
+          alignment = Alignment.bottomCenter;
+          break;
+      }
+
+      otherPlayers.add(OtherPlayerWidget(
+        state: state,
+        playerNumber: otherPlayesNumbers[i],
+        alignment: alignment,
+      ));
+    }
+
+    return ResponsiveBuilder(builder: (context, _) {
+      return Container(
+        color: Colors.green[200],
+        child: Stack(
+          children: [
+            PlayerWidget(state: state),
+            ...otherPlayers,
+          ],
+        ),
+      );
+    });
   }
 }

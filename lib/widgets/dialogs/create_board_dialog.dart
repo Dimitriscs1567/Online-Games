@@ -155,7 +155,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
       )
           .then((value) {
         if (value) {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else {
           setState(() {
             _isLoading = false;

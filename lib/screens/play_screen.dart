@@ -17,6 +17,7 @@ class PlayScreen extends StatelessWidget {
     return ScreenWrapper(
       appbarTitle: _gameTitle,
       noConstraints: true,
+      withAuthentication: true,
       child: StreamBuilder(
         stream: Socket.getStream(Message.getBoard(_creator, _password)),
         builder: (context, snapshot) {
@@ -37,7 +38,7 @@ class PlayScreen extends StatelessWidget {
       case "Error":
         return _errorBody(state["body"]["error"]);
       case "BoardState":
-        return Playground(state: state["body"]);
+        return Playground(state: state["body"]["board"]);
       default:
         return _errorBody("This should never happen");
     }
