@@ -8,7 +8,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 class Playground extends StatelessWidget {
   late final dynamic state;
   late final int playerNumber;
-  late final String playerName;
+  late final bool isJoined;
   List<int> otherPlayesNumbers = [];
 
   Playground({@required this.state}) {
@@ -17,7 +17,7 @@ class Playground extends StatelessWidget {
 
     playerNumber = (state["states"].last)["players"]
         .indexOf(controller.user.value.username);
-    playerName = (state["states"].last)["players"][playerNumber];
+    isJoined = playerNumber > -1;
 
     for (int i = 0; i < state["capacity"]; i++) {
       if (i != playerNumber) {
@@ -50,6 +50,7 @@ class Playground extends StatelessWidget {
         state: state,
         playerNumber: otherPlayesNumbers[i],
         alignment: alignment,
+        isJoined: isJoined,
       ));
     }
 
@@ -58,7 +59,7 @@ class Playground extends StatelessWidget {
         color: Colors.green[200],
         child: Stack(
           children: [
-            PlayerWidget(state: state),
+            isJoined ? PlayerWidget(state: state) : Container(),
             ...otherPlayers,
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:get_storage/get_storage.dart';
 class Storage {
   static const String TOKEN = "token";
   static const String REFRESH_TOKEN = "refreshToken";
+  static const String BOARD_PASS = "boardPassword";
 
   static void saveValue(String key, String value) {
     GetStorage().write(key, value);

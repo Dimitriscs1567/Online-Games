@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_games/models/Message.dart';
 import 'package:online_games/utils/api.dart';
+import 'package:online_games/utils/socket.dart';
+import 'package:online_games/utils/storage.dart';
 
 class OtherPlayerWidget extends StatelessWidget {
   late final dynamic state;
   late final int? playerNumber;
   late final AlignmentGeometry? alignment;
+  late final bool? isJoined;
 
   OtherPlayerWidget({
     @required this.state,
     @required this.playerNumber,
     @required this.alignment,
+    @required this.isJoined,
   });
 
   @override
@@ -71,23 +76,11 @@ class OtherPlayerWidget extends StatelessWidget {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           Padding(padding: const EdgeInsets.all(5.0)),
-          RotatedBox(
-            quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
-            child: ElevatedButton(
-              child: Text("Change seat"),
-              onPressed: () {},
-            ),
-          ),
+          isJoined! ? Container() : _seatButton(),
         ],
       );
     } else {
-      return RotatedBox(
-        quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
-        child: ElevatedButton(
-          child: Text("Change seat"),
-          onPressed: () {},
-        ),
-      );
+      return _seatButton();
     }
   }
 
@@ -113,6 +106,24 @@ class OtherPlayerWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _seatButton() {
+    return RotatedBox(
+      quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
+      child: ElevatedButton(
+        child: Text(isJoined! ? "Change seat" : "Join"),
+        onPressed: () {
+          if (!isJoined!) {
+            final String creator = state["creator"];
+            final String password = Storage.getValue(Storage.BOARD_PASS);
+
+            Socket.sendMessage(
+                Message.joinBoard(creator, playerNumber!, password));
+          }
+        },
       ),
     );
   }

@@ -18,6 +18,14 @@ class Message {
         .toList();
   }
 
+  Message.joinBoard(String creator, int position, String? password) {
+    _type = "joinBoard";
+    _params =
+        (password != null ? [creator, position, password] : [creator, position])
+            .map((param) => ":$param")
+            .toList();
+  }
+
   String get type => this._type;
 
   @override

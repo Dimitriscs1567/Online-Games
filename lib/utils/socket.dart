@@ -25,4 +25,12 @@ class Socket {
 
     return _channelStream!;
   }
+
+  static void sendMessage(Message message) {
+    if (_channel == null) {
+      _initChannel();
+    }
+
+    _channel!.sink.add(message.toString());
+  }
 }
