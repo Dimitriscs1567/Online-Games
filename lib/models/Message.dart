@@ -26,6 +26,18 @@ class Message {
             .toList();
   }
 
+  Message.leaveBoard(String creator, String? password) {
+    _type = "leaveBoard";
+    _params = (password != null ? [creator, password] : [creator])
+        .map((param) => ":$param")
+        .toList();
+  }
+
+  Message.kickPlayer(String player) {
+    _type = "kickPlayer";
+    _params = ([player]).map((param) => ":$param").toList();
+  }
+
   String get type => this._type;
 
   @override

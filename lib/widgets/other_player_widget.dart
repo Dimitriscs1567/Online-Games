@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/models/Message.dart';
 import 'package:online_games/utils/api.dart';
 import 'package:online_games/utils/socket.dart';
@@ -58,6 +59,10 @@ class OtherPlayerWidget extends StatelessWidget {
   Widget _nameWidget() {
     final String? name = (state["states"].last)["players"][playerNumber];
     final bool hasStarted = state["started"];
+    final controller = Get.find<AuthController>();
+    final bool isCreator = (state["creator"] as String)
+            .compareTo(controller.user.value.username) ==
+        0;
 
     if (hasStarted && name != null) {
       return RotatedBox(
@@ -67,20 +72,24 @@ class OtherPlayerWidget extends StatelessWidget {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       );
-    } else if (name != null) {
+    } else {
+      bool seeButton = (isCreator && name != null) ||
+          (!isCreator && !isJoined! && name == null);
+
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            name,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          RotatedBox(
+            quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
+            child: Text(
+              name != null ? name : "Empty seat",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
           ),
           Padding(padding: const EdgeInsets.all(5.0)),
-          isJoined! ? Container() : _seatButton(),
+          !seeButton ? Container() : _seatButton(name),
         ],
       );
-    } else {
-      return _seatButton();
     }
   }
 
@@ -110,20 +119,26 @@ class OtherPlayerWidget extends StatelessWidget {
     );
   }
 
-  Widget _seatButton() {
-    return RotatedBox(
-      quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
-      child: ElevatedButton(
-        child: Text(isJoined! ? "Change seat" : "Join"),
-        onPressed: () {
-          if (!isJoined!) {
-            final String creator = state["creator"];
-            final String password = Storage.getValue(Storage.BOARD_PASS);
+  Widget _seatButton(String? name) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(isJoined! ? Colors.red : Colors.green),
+      ),
+      onPressed: () {
+        if (!isJoined!) {
+          final String creator = state["creator"];
+          final String password = Storage.getValue(Storage.BOARD_PASS);
 
-            Socket.sendMessage(
-                Message.joinBoard(creator, playerNumber!, password));
-          }
-        },
+          Socket.sendMessage(
+              Message.joinBoard(creator, playerNumber!, password));
+        } else {
+          Socket.sendMessage(Message.kickPlayer(name ?? ""));
+        }
+      },
+      child: RotatedBox(
+        quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
+        child: Text(isJoined! ? "Kick" : "Join"),
       ),
     );
   }
