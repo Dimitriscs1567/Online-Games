@@ -1,21 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:online_games/models/Message.dart';
 import 'package:online_games/utils/socket.dart';
 import 'package:online_games/utils/storage.dart';
 import 'package:online_games/widgets/playground.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
+import 'package:vrouter/vrouter.dart';
 
 class PlayScreen extends StatelessWidget {
-  final String _gameTitle = Get.parameters["game"] ?? "";
-  final String _creator = Get.parameters["creator"] ?? "";
-
   @override
   Widget build(BuildContext context) {
+    final String gameTitle =
+        VRouteData.of(context).pathParameters["game"] ?? "";
+    final String creator =
+        VRouteData.of(context).pathParameters["creator"] ?? "";
+
     return ScreenWrapper(
-      appbarTitle: _gameTitle,
+      appbarTitle: gameTitle,
       noConstraints: true,
       withAuthentication: true,
       child: FutureBuilder<String?>(
@@ -26,8 +28,8 @@ class PlayScreen extends StatelessWidget {
           }
 
           return StreamBuilder(
-            stream: Socket.getStream(Message.getBoard(_creator, snapshot.data))
-                .where(_filterStream),
+            stream: Socket.getStream(Message.getBoard(creator, snapshot.data))
+                .where((event) => _filterStream(event, creator)),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -67,7 +69,7 @@ class PlayScreen extends StatelessWidget {
     );
   }
 
-  bool _filterStream(dynamic event) {
+  bool _filterStream(dynamic event, String gameCreator) {
     final type = json.decode(event)["type"] as String;
     if (type.compareTo("BoardState") != 0 && type.compareTo("Error") != 0) {
       return false;
@@ -75,7 +77,7 @@ class PlayScreen extends StatelessWidget {
 
     if (type.compareTo("BoardState") == 0) {
       final creator = json.decode(event)["body"]["board"]["creator"] as String;
-      if (creator.compareTo(_creator) != 0) {
+      if (creator.compareTo(gameCreator) != 0) {
         return false;
       }
     }

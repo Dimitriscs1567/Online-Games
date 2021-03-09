@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/game_controller.dart';
 import 'package:online_games/models/Game.dart';
+import 'package:online_games/utils/router.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
 
 class GameSelectionScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class GameSelectionScreen extends StatelessWidget {
             if (controller.allGames.isEmpty) {
               return _emptyBody();
             } else {
-              return _gamesBody(controller.allGames);
+              return _gamesBody(context, controller.allGames);
             }
           }
         },
@@ -41,7 +42,7 @@ class GameSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _gamesBody(List<Game> games) {
+  Widget _gamesBody(BuildContext context, List<Game> games) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: GridView.extent(
@@ -54,7 +55,7 @@ class GameSelectionScreen extends StatelessWidget {
             .map(
               (game) => Center(
                 child: InkWell(
-                  onTap: () => Get.toNamed("/${game.title}/boards"),
+                  onTap: () => CRouter.push(context, "/${game.title}/boards"),
                   child: Image.network(
                     game.image,
                     fit: BoxFit.fill,

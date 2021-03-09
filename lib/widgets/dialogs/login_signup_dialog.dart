@@ -95,16 +95,38 @@ class _LoginSignUpDialogState extends State<LoginSignUpDialog> {
 
   Widget _textField(String label) {
     return TextFormField(
-      controller: _getControllerFromLabel(label),
+      controller: _getControllerForLabel(label),
       decoration: InputDecoration(
-        icon: Icon(Icons.person),
+        icon: _getIconForLabel(label),
         labelText: label,
       ),
       onChanged: _onChanged,
       obscureText: label.compareTo("Password") == 0 ||
           label.compareTo("Confirm Password") == 0,
-      validator: (value) => _getValidatorFromLabel(label, value),
+      validator: (value) => _getValidatorForLabel(label, value),
     );
+  }
+
+  Icon _getIconForLabel(String label) {
+    switch (label) {
+      case 'Email / Username':
+        return Icon(Icons.person);
+
+      case "Password":
+        return Icon(Icons.security);
+
+      case "Email":
+        return Icon(Icons.email);
+
+      case "Username":
+        return Icon(Icons.person);
+
+      case "Confirm Password":
+        return Icon(Icons.security);
+
+      default:
+        return Icon(Icons.error);
+    }
   }
 
   void _onChanged(_) {
@@ -115,7 +137,7 @@ class _LoginSignUpDialogState extends State<LoginSignUpDialog> {
     }
   }
 
-  String? _getValidatorFromLabel(String label, String? value) {
+  String? _getValidatorForLabel(String label, String? value) {
     switch (label) {
       case 'Email / Username':
         if (value != null && value.trim().isEmpty) {
@@ -172,7 +194,7 @@ class _LoginSignUpDialogState extends State<LoginSignUpDialog> {
     }
   }
 
-  TextEditingController _getControllerFromLabel(String label) {
+  TextEditingController _getControllerForLabel(String label) {
     switch (label) {
       case 'Email / Username':
         return _emailController;
@@ -188,6 +210,7 @@ class _LoginSignUpDialogState extends State<LoginSignUpDialog> {
 
       case "Confirm Password":
         return _confirmPasswordController;
+
       default:
         return TextEditingController();
     }

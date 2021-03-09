@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/models/Board.dart';
+import 'package:online_games/utils/router.dart';
 import 'package:online_games/utils/storage.dart';
 import 'package:online_games/widgets/dialogs/board_password_dialog.dart';
 
@@ -60,10 +61,12 @@ class BoardWidget extends StatelessWidget {
                   if (pass != null) {
                     Storage.saveValue(Storage.BOARD_PASS, pass);
 
-                    Get.toNamed("/${board!.gameTitle}/play/${board!.creator}");
+                    CRouter.push(
+                        context, "/${board!.gameTitle}/play/${board!.creator}");
                   }
                 } else {
-                  Get.toNamed("/${board!.gameTitle}/play/${board!.creator}");
+                  CRouter.push(
+                      context, "/${board!.gameTitle}/play/${board!.creator}");
                 }
               },
         child: Card(

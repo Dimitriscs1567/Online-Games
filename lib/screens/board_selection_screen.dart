@@ -6,19 +6,22 @@ import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/controllers/game_controller.dart';
 import 'package:online_games/models/Board.dart';
 import 'package:online_games/models/Message.dart';
+import 'package:online_games/utils/router.dart';
 import 'package:online_games/utils/socket.dart';
 import 'package:online_games/widgets/boardWidget.dart';
 import 'package:online_games/widgets/dialogs/create_board_dialog.dart';
 import 'package:online_games/widgets/screen_wrapper.dart';
+import 'package:vrouter/vrouter.dart';
 
 class BoardSelectionScreen extends StatelessWidget {
-  final String _gameTitle = Get.parameters["game"] ?? "";
-
   @override
   Widget build(BuildContext context) {
+    final String gameTitle =
+        VRouteData.of(context).pathParameters['game'] ?? "";
+
     return ScreenWrapper(
       withAuthentication: true,
-      appbarTitle: "$_gameTitle Boards",
+      appbarTitle: "$gameTitle Boards",
       floatingButton: FloatingActionButton.extended(
         label: Text("Create board"),
         icon: Icon(
@@ -33,7 +36,8 @@ class BoardSelectionScreen extends StatelessWidget {
             final auth = Get.find<AuthController>();
 
             if (value) {
-              Get.toNamed("/$_gameTitle/play/${auth.user.value!.username}");
+              CRouter.push(
+                  context, "/$gameTitle/play/${auth.user.value!.username}");
             }
           });
         },
@@ -49,7 +53,7 @@ class BoardSelectionScreen extends StatelessWidget {
 
           if (controller.isInitiallized.value! &&
               controller.selectedGame.value!.title.isEmpty) {
-            controller.changeSelectedGame(_gameTitle);
+            controller.changeSelectedGame(gameTitle);
           }
 
           if (!controller.selectedGameExists.value!) {
@@ -57,8 +61,8 @@ class BoardSelectionScreen extends StatelessWidget {
           }
 
           return StreamBuilder<dynamic>(
-            stream: Socket.getStream(Message.allBoards(_gameTitle))
-                .where(_filterStream)
+            stream: Socket.getStream(Message.allBoards(gameTitle))
+                .where((event) => _filterStream(event, gameTitle))
                 .map(_transformStream),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -120,14 +124,14 @@ class BoardSelectionScreen extends StatelessWidget {
     );
   }
 
-  bool _filterStream(dynamic event) {
+  bool _filterStream(dynamic event, String gameTitle) {
     final type = json.decode(event)["type"] as String;
     if (type.compareTo("Boards") != 0) {
       return false;
     }
 
     final game = json.decode(event)["body"]["gameTitle"] as String;
-    if (game.compareTo(_gameTitle) != 0) {
+    if (game.compareTo(gameTitle) != 0) {
       return false;
     }
 
