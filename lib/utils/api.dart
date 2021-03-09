@@ -15,8 +15,8 @@ class API {
 
   static Future<List<dynamic>> getAllGames() async {
     try {
-      final response = await http
-          .get(GET_ALL_GAMES, headers: {"Content-Type": "application/json"});
+      final response = await http.get(Uri.parse(GET_ALL_GAMES),
+          headers: {"Content-Type": "application/json"});
 
       if (response.statusCode == 200) {
         return json.decode(response.body) as List<dynamic>;
@@ -31,7 +31,7 @@ class API {
   static Future<dynamic?> getGameByTitle(String gameTitle) async {
     try {
       final response = await http.post(
-        GET_GAME,
+        Uri.parse(GET_GAME),
         headers: {"Content-Type": "application/json"},
         body: json.encode({"title": "$gameTitle"}),
       );
@@ -68,7 +68,7 @@ class API {
 
     try {
       final response = await http.post(
-        CREATE_NEW_BOARD,
+        Uri.parse(CREATE_NEW_BOARD),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${Storage.getValue(Storage.TOKEN)}",
@@ -89,7 +89,7 @@ class API {
   static Future<dynamic> login(String email, String password) async {
     try {
       final response = await http.post(
-        LOGIN,
+        Uri.parse(LOGIN),
         headers: {"Content-Type": "application/json"},
         body: json.encode({"email": email, "password": password}),
       );
@@ -109,7 +109,7 @@ class API {
       String email, String username, String password) async {
     try {
       final response = await http.post(
-        SIGNUP,
+        Uri.parse(SIGNUP),
         headers: {"Content-Type": "application/json"},
         body: json.encode(
             {"email": email, "username": username, "password": password}),
@@ -129,7 +129,7 @@ class API {
   static Future<dynamic> validateToken(String token) async {
     try {
       final response = await http.get(
-        VALIDATE_TOKEN,
+        Uri.parse(VALIDATE_TOKEN),
         headers: {"Authorization": "Bearer $token"},
       );
 
@@ -147,7 +147,7 @@ class API {
   static Future<dynamic> getNewToken(String refresh) async {
     try {
       final response = await http.post(
-        GET_NEW_TOKEN,
+        Uri.parse(GET_NEW_TOKEN),
         headers: {"Content-Type": "application/json"},
         body: json.encode({"refreshToken": refresh}),
       );

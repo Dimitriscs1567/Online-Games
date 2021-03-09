@@ -13,7 +13,7 @@ class BoardWidget extends StatelessWidget {
     final controller = Get.find<AuthController>();
 
     _hasPassword = board!.password.isNotEmpty &&
-        board!.creator.compareTo(controller.user.value.username) != 0;
+        board!.creator.compareTo(controller.user.value!.username) != 0;
   }
 
   @override

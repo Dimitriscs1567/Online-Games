@@ -20,7 +20,7 @@ class MainAppBar extends StatelessWidget {
             builder: (controller) {
               return Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: controller.user.value.isLoggedIn()
+                child: controller.user.value!.isLoggedIn()
                     ? _getIconButton()
                     : _getLoginButton(),
               );
@@ -30,8 +30,8 @@ class MainAppBar extends StatelessWidget {
   }
 
   Widget _getLoginButton() {
-    return OutlineButton(
-      borderSide: BorderSide.none,
+    return OutlinedButton(
+      style: ButtonStyle(side: MaterialStateProperty.all(BorderSide.none)),
       child: Text(
         "Login\nSign up",
         textAlign: TextAlign.center,
@@ -52,6 +52,7 @@ class MainAppBar extends StatelessWidget {
   }
 
   void _openDialog() {
-    showDialog(context: Get.context, builder: (context) => LoginSignUpDialog());
+    showDialog(
+        context: Get.context!, builder: (context) => LoginSignUpDialog());
   }
 }

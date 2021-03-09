@@ -30,11 +30,12 @@ class ScreenWrapper extends StatelessWidget {
       floatingActionButton: GetX<AuthController>(
           init: AuthController(),
           builder: (controller) {
-            if (!controller.user.value.isLoggedIn() || floatingButton == null) {
+            if (!controller.user.value!.isLoggedIn() ||
+                floatingButton == null) {
               return Container();
             }
 
-            return floatingButton;
+            return floatingButton!;
           }),
       body: Center(
         child: Container(
@@ -45,15 +46,15 @@ class ScreenWrapper extends StatelessWidget {
           child: GetX<AuthController>(
               init: AuthController(),
               builder: (controller) {
-                if (!controller.user.value.isLoggedIn()) {
+                if (!controller.user.value!.isLoggedIn()) {
                   if (withAuthentication == null || !withAuthentication!) {
-                    return child;
+                    return child!;
                   }
 
                   return UnauthorizedWidget();
                 }
 
-                return child;
+                return child!;
               }),
         ),
       ),

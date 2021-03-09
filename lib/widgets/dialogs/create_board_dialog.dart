@@ -18,7 +18,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final textFields = _controller.selectedGame.value.capacity > 0
+    final textFields = _controller.selectedGame.value!.capacity > 0
         ? [
             _textField("Title*"),
             _textField("Password"),
@@ -143,15 +143,15 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
       final authController = Get.find<AuthController>();
       _controller
           .createNewBoard(
-        authController.user.value.username,
+        authController.user.value!.username,
         _titleController.text.trim(),
         _passwordController.text.trim().isEmpty
             ? null
             : _passwordController.text.trim(),
-        _controller.selectedGame.value.capacity > 0
+        _controller.selectedGame.value!.capacity > 0
             ? null
             : int.parse(_capacityController.text.trim()),
-        _controller.selectedGame.value.title,
+        _controller.selectedGame.value!.title,
       )
           .then((value) {
         if (value) {

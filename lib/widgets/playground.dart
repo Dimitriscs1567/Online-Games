@@ -15,7 +15,7 @@ class Playground extends StatelessWidget {
     final controller = Get.find<AuthController>();
 
     playerNumber = (state["states"].last)["players"]
-        .indexOf(controller.user.value.username);
+        .indexOf(controller.user.value!.username);
     isJoined = playerNumber > -1;
   }
 

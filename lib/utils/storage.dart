@@ -1,15 +1,18 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Storage {
   static const String TOKEN = "token";
   static const String REFRESH_TOKEN = "refreshToken";
   static const String BOARD_PASS = "boardPassword";
 
-  static void saveValue(String key, String value) {
-    GetStorage().write(key, value);
+  static Future<SharedPreferences> get storage =>
+      SharedPreferences.getInstance();
+
+  static Future<void> saveValue(String key, String value) async {
+    (await storage).setString(key, value);
   }
 
-  static String getValue(String key) {
-    return GetStorage().read(key);
+  static Future<String?> getValue(String key) async {
+    return (await storage).getString(key);
   }
 }

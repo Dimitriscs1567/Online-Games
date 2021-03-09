@@ -33,7 +33,7 @@ class BoardSelectionScreen extends StatelessWidget {
             final auth = Get.find<AuthController>();
 
             if (value) {
-              Get.toNamed("/$_gameTitle/play/${auth.user.value.username}");
+              Get.toNamed("/$_gameTitle/play/${auth.user.value!.username}");
             }
           });
         },
@@ -41,18 +41,18 @@ class BoardSelectionScreen extends StatelessWidget {
       child: GetX<GameController>(
         init: GameController(),
         builder: (controller) {
-          if (!controller.isInitiallized.value) {
+          if (!controller.isInitiallized.value!) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (controller.isInitiallized.value &&
-              controller.selectedGame.value.title.isEmpty) {
+          if (controller.isInitiallized.value! &&
+              controller.selectedGame.value!.title.isEmpty) {
             controller.changeSelectedGame(_gameTitle);
           }
 
-          if (!controller.selectedGameExists.value) {
+          if (!controller.selectedGameExists.value!) {
             return _errorBody();
           }
 

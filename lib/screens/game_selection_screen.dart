@@ -12,7 +12,7 @@ class GameSelectionScreen extends StatelessWidget {
       child: GetX<GameController>(
         init: GameController(),
         builder: (controller) {
-          if (!controller.isInitiallized.value) {
+          if (!controller.isInitiallized.value!) {
             return Center(
               child: CircularProgressIndicator(),
             );

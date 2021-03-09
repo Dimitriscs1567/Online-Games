@@ -11,7 +11,6 @@ import 'package:online_games/widgets/screen_wrapper.dart';
 class PlayScreen extends StatelessWidget {
   final String _gameTitle = Get.parameters["game"] ?? "";
   final String _creator = Get.parameters["creator"] ?? "";
-  final String? _password = Storage.getValue(Storage.BOARD_PASS);
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +18,26 @@ class PlayScreen extends StatelessWidget {
       appbarTitle: _gameTitle,
       noConstraints: true,
       withAuthentication: true,
-      child: StreamBuilder(
-        stream: Socket.getStream(Message.getBoard(_creator, _password))
-            .where(_filterStream),
+      child: FutureBuilder<String?>(
+        future: Storage.getValue(Storage.BOARD_PASS),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: CircularProgressIndicator());
           }
 
-          return _getWidgetFromState(json.decode(snapshot.data.toString()));
+          return StreamBuilder(
+            stream: Socket.getStream(Message.getBoard(_creator, snapshot.data))
+                .where(_filterStream),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return _getWidgetFromState(json.decode(snapshot.data.toString()));
+            },
+          );
         },
       ),
     );

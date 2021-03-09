@@ -17,7 +17,7 @@ class PlayerWidget extends StatelessWidget {
     final double cardWidth = (maxWidth / 14) - 4;
     final controller = Get.find<AuthController>();
     final bool isCreator = (state["creator"] as String)
-            .compareTo(controller.user.value.username) ==
+            .compareTo(controller.user.value!.username) ==
         0;
 
     return Container(
@@ -34,7 +34,7 @@ class PlayerWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  controller.user.value.username,
+                  controller.user.value!.username,
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: const EdgeInsets.all(5.0)),
@@ -45,10 +45,10 @@ class PlayerWidget extends StatelessWidget {
                               MaterialStateProperty.all(Colors.red),
                         ),
                         child: Text("Leave"),
-                        onPressed: () {
+                        onPressed: () async {
                           Socket.sendMessage(Message.leaveBoard(
                             state["creator"],
-                            Storage.getValue(Storage.BOARD_PASS),
+                            await Storage.getValue(Storage.BOARD_PASS),
                           ));
                         },
                       )

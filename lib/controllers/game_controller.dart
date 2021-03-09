@@ -20,14 +20,13 @@ class GameController extends GetxController {
   }
 
   void changeSelectedGame(String gameTitle) {
-    Game? newSelected = allGames.firstWhere(
-        (Game game) => game.title.compareTo(gameTitle) == 0,
-        orElse: () => null);
+    try {
+      Game newSelected = allGames
+          .firstWhere((Game game) => game.title.compareTo(gameTitle) == 0);
 
-    if (newSelected != null) {
       selectedGameExists.value = true;
       selectedGame.value = newSelected;
-    } else {
+    } catch (error) {
       selectedGameExists.value = false;
     }
   }
@@ -46,14 +45,14 @@ class GameController extends GetxController {
   }
 
   Future<void> _handleToken() async {
-    String? token = Storage.getValue(Storage.TOKEN);
+    String? token = await Storage.getValue(Storage.TOKEN);
     if (token != null) {
       var validationResult = await API.validateToken(token);
       if (validationResult != null) {
         return;
       }
 
-      String? refreshToken = Storage.getValue(Storage.REFRESH_TOKEN);
+      String? refreshToken = await Storage.getValue(Storage.REFRESH_TOKEN);
       if (refreshToken != null) {
         var refreshResult = await API.getNewToken(refreshToken);
         if (refreshResult != null) {

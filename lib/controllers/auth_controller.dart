@@ -22,7 +22,7 @@ class AuthController extends GetxController {
   }
 
   Future<bool> _validateToken() async {
-    String? token = Storage.getValue(Storage.TOKEN);
+    String? token = await Storage.getValue(Storage.TOKEN);
     if (token != null) {
       var validationResult = await API.validateToken(token);
       if (validationResult != null) {
@@ -36,7 +36,7 @@ class AuthController extends GetxController {
   }
 
   Future<bool> _getNewTokens() async {
-    String? refreshToken = Storage.getValue(Storage.REFRESH_TOKEN);
+    String? refreshToken = await Storage.getValue(Storage.REFRESH_TOKEN);
     if (refreshToken != null) {
       var refreshResult = await API.getNewToken(refreshToken);
       if (refreshResult != null) {
