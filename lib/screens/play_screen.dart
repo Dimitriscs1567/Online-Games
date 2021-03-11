@@ -15,31 +15,23 @@ class PlayScreen extends StatelessWidget {
         VRouteData.of(context).pathParameters["game"] ?? "";
     final String creator =
         VRouteData.of(context).pathParameters["creator"] ?? "";
+    final String? password = Storage.getValue(Storage.BOARD_PASS);
 
     return ScreenWrapper(
       appbarTitle: gameTitle,
       noConstraints: true,
       withAuthentication: true,
-      child: FutureBuilder<String?>(
-        future: Storage.getValue(Storage.BOARD_PASS),
+      child: StreamBuilder(
+        stream: Socket.getStream(Message.getBoard(creator, password))
+            .where((event) => _filterStream(event, creator)),
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
-          return StreamBuilder(
-            stream: Socket.getStream(Message.getBoard(creator, snapshot.data))
-                .where((event) => _filterStream(event, creator)),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              return _getWidgetFromState(json.decode(snapshot.data.toString()));
-            },
-          );
+          return _getWidgetFromState(json.decode(snapshot.data.toString()));
         },
       ),
     );

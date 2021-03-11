@@ -45,10 +45,10 @@ class PlayerWidget extends StatelessWidget {
                               MaterialStateProperty.all(Colors.red),
                         ),
                         child: Text("Leave"),
-                        onPressed: () async {
+                        onPressed: () {
                           Socket.sendMessage(Message.leaveBoard(
                             state["creator"],
-                            await Storage.getValue(Storage.BOARD_PASS),
+                            Storage.getValue(Storage.BOARD_PASS),
                           ));
                         },
                       )

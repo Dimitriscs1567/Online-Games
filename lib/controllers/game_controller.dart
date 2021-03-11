@@ -45,14 +45,14 @@ class GameController extends GetxController {
   }
 
   Future<void> _handleToken() async {
-    String? token = await Storage.getValue(Storage.TOKEN);
+    String? token = Storage.getValue(Storage.TOKEN);
     if (token != null) {
       var validationResult = await API.validateToken(token);
       if (validationResult != null) {
         return;
       }
 
-      String? refreshToken = await Storage.getValue(Storage.REFRESH_TOKEN);
+      String? refreshToken = Storage.getValue(Storage.REFRESH_TOKEN);
       if (refreshToken != null) {
         var refreshResult = await API.getNewToken(refreshToken);
         if (refreshResult != null) {

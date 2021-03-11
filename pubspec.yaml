@@ -30,8 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   responsive_builder: ^0.4.0-nullsafety.1
   web_socket_channel: ^2.0.0
-  shared_preferences: ^2.0.3
   get: ^4.0.0-nullsafety.2
+  get_storage: ^2.0.1
   http: ^0.13.0
   universal_io: ^2.0.0
   vrouter: ^1.0.0-nullsafety.11

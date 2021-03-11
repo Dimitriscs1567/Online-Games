@@ -57,7 +57,7 @@ class OtherPlayerWidget extends StatelessWidget {
   }
 
   Widget _nameWidget() {
-    final String? name = (state["states"].last)["players"][playerNumber];
+    final String? name = state["state"]["players"][playerNumber];
     final bool hasStarted = state["started"];
     final controller = Get.find<AuthController>();
     final bool isCreator = (state["creator"] as String)
@@ -125,10 +125,10 @@ class OtherPlayerWidget extends StatelessWidget {
         backgroundColor:
             MaterialStateProperty.all(isJoined! ? Colors.red : Colors.green),
       ),
-      onPressed: () async {
+      onPressed: () {
         if (!isJoined!) {
           final String creator = state["creator"];
-          final String? password = await Storage.getValue(Storage.BOARD_PASS);
+          final String? password = Storage.getValue(Storage.BOARD_PASS);
 
           Socket.sendMessage(
               Message.joinBoard(creator, playerNumber!, password));

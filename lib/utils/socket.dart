@@ -7,7 +7,7 @@ class Socket {
   static Stream<dynamic>? _channelStream;
   static const String BASIC_URL = "ws://localhost:8080";
 
-  static _initChannel() {
+  static void _initChannel() {
     _channel = WebSocketChannel.connect(
         Uri.parse("$BASIC_URL?token=${Storage.getValue(Storage.TOKEN)}"));
   }
