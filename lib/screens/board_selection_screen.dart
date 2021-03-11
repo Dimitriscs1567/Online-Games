@@ -65,8 +65,7 @@ class BoardSelectionScreen extends StatelessWidget {
                 .where((event) => _filterStream(event, gameTitle))
                 .map(_transformStream),
             builder: (context, snapshot) {
-              print(snapshot);
-              if (snapshot.connectionState != ConnectionState.done) {
+              if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
 

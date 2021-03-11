@@ -8,8 +8,12 @@ import 'package:online_games/utils/storage.dart';
 
 class PlayerWidget extends StatelessWidget {
   late final dynamic state;
+  late final int? position;
 
-  PlayerWidget({@required this.state});
+  PlayerWidget({
+    @required this.state,
+    @required this.position,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,7 @@ class PlayerWidget extends StatelessWidget {
     final bool isCreator = (state["creator"] as String)
             .compareTo(controller.user.value!.username) ==
         0;
+    final bool ready = state["state"]["readyPlayers"][position];
 
     return Container(
       alignment: Alignment.bottomCenter,
@@ -35,7 +40,11 @@ class PlayerWidget extends StatelessWidget {
               children: [
                 Text(
                   controller.user.value!.username,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: ready ? Colors.black : Colors.red,
+                  ),
                 ),
                 Padding(padding: const EdgeInsets.all(5.0)),
                 !isCreator

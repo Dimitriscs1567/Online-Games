@@ -38,6 +38,13 @@ class Message {
     _params = ([player]).map((param) => ":$param").toList();
   }
 
+  Message.playerReady(String creator, String? password) {
+    _type = "playerReady";
+    _params = (password != null ? [creator, password] : [creator])
+        .map((param) => ":$param")
+        .toList();
+  }
+
   String get type => this._type;
 
   @override

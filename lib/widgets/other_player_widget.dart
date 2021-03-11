@@ -8,13 +8,13 @@ import 'package:online_games/utils/storage.dart';
 
 class OtherPlayerWidget extends StatelessWidget {
   late final dynamic state;
-  late final int? playerNumber;
+  late final int? position;
   late final AlignmentGeometry? alignment;
   late final bool? isJoined;
 
   OtherPlayerWidget({
     @required this.state,
-    @required this.playerNumber,
+    @required this.position,
     @required this.alignment,
     @required this.isJoined,
   });
@@ -57,19 +57,23 @@ class OtherPlayerWidget extends StatelessWidget {
   }
 
   Widget _nameWidget() {
-    final String? name = state["state"]["players"][playerNumber];
+    final String? name = state["state"]["players"][position];
     final bool hasStarted = state["started"];
     final controller = Get.find<AuthController>();
     final bool isCreator = (state["creator"] as String)
             .compareTo(controller.user.value!.username) ==
         0;
+    final bool ready = state["state"]["readyPlayers"][position];
 
     if (hasStarted && name != null) {
       return RotatedBox(
         quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
         child: Text(
           name,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       );
     } else {
@@ -83,7 +87,11 @@ class OtherPlayerWidget extends StatelessWidget {
             quarterTurns: _getAngleFromAlignment() == 2 ? 2 : 0,
             child: Text(
               name != null ? name : "Empty seat",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: ready ? Colors.black : Colors.red,
+              ),
             ),
           ),
           Padding(padding: const EdgeInsets.all(5.0)),
@@ -130,8 +138,7 @@ class OtherPlayerWidget extends StatelessWidget {
           final String creator = state["creator"];
           final String? password = Storage.getValue(Storage.BOARD_PASS);
 
-          Socket.sendMessage(
-              Message.joinBoard(creator, playerNumber!, password));
+          Socket.sendMessage(Message.joinBoard(creator, position!, password));
         } else {
           Socket.sendMessage(Message.kickPlayer(name ?? ""));
         }

@@ -2,30 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_games/controllers/auth_controller.dart';
 import 'package:online_games/widgets/other_player_widget.dart';
+import 'package:online_games/widgets/play_table_widget.dart';
 import 'package:online_games/widgets/playerWidget.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class Playground extends StatelessWidget {
   late final dynamic state;
-  late final int playerNumber;
+  late final int position;
   late final bool isJoined;
 
   Playground({@required this.state}) {
     print(state.toString());
     final controller = Get.find<AuthController>();
 
-    playerNumber =
-        state["state"]["players"].indexOf(controller.user.value!.username);
-    isJoined = playerNumber > -1;
+    position =
+        (state["state"])["players"].indexOf(controller.user.value!.username);
+    isJoined = position > -1;
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> otherPlayers = [];
     for (int i = 0; i < state["capacity"]; i++) {
-      if (i != playerNumber) {
+      if (i != position) {
         AlignmentGeometry alignment;
-        int distance = i - playerNumber;
+        int distance = i - position;
         if (distance < 0) {
           distance += state["capacity"] as int;
         }
@@ -47,7 +48,7 @@ class Playground extends StatelessWidget {
 
         otherPlayers.add(OtherPlayerWidget(
           state: state,
-          playerNumber: i,
+          position: i,
           alignment: alignment,
           isJoined: isJoined,
         ));
@@ -59,8 +60,19 @@ class Playground extends StatelessWidget {
         color: Colors.green[200],
         child: Stack(
           children: [
-            isJoined ? PlayerWidget(state: state) : Container(),
+            isJoined
+                ? PlayerWidget(
+                    state: state,
+                    position: position,
+                  )
+                : Container(),
             ...otherPlayers,
+            isJoined
+                ? PlayTableWidget(
+                    state: state,
+                    position: position,
+                  )
+                : Container(),
           ],
         ),
       );
