@@ -28,21 +28,17 @@ class Message {
 
   Message.leaveBoard(String creator, String? password) {
     _type = "leaveBoard";
-    _params = (password != null ? [creator, password] : [creator])
-        .map((param) => ":$param")
-        .toList();
+    _params = [creator].map((param) => ":$param").toList();
   }
 
   Message.kickPlayer(String player) {
     _type = "kickPlayer";
-    _params = ([player]).map((param) => ":$param").toList();
+    _params = [player].map((param) => ":$param").toList();
   }
 
-  Message.playerReady(String creator, String? password) {
+  Message.playerReady(String creator) {
     _type = "playerReady";
-    _params = (password != null ? [creator, password] : [creator])
-        .map((param) => ":$param")
-        .toList();
+    _params = [creator].map((param) => ":$param").toList();
   }
 
   String get type => this._type;
