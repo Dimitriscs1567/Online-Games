@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_games/models/Message.dart';
 import 'package:online_games/utils/socket.dart';
-import 'package:online_games/utils/storage.dart';
 
 class PlayTableWidget extends StatelessWidget {
   late final dynamic state;
@@ -26,7 +25,6 @@ class PlayTableWidget extends StatelessWidget {
           onPressed: () {
             Socket.sendMessage(Message.playerReady(
               state["creator"],
-              Storage.getValue(Storage.BOARD_PASS),
             ));
           },
         ),
